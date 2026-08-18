@@ -24,7 +24,13 @@ if ( $query->have_posts() ) {
 		);
 	}
 } else {
-	$members = Defaults::team();
+	$members = array_map(
+		static function ( array $member ): array {
+			$member['name'] = sprintf( __( 'Demo: %s', 'estatein' ), $member['name'] );
+			return $member;
+		},
+		Defaults::team()
+	);
 }
 wp_reset_postdata();
 ?>
@@ -50,4 +56,3 @@ get_template_part(
 			?>
 		<img src="<?php echo esc_url( get_theme_file_uri( '/assets/images/' . $member['image'] ) ); ?>" width="500" height="430" alt="<?php echo esc_attr( $member['name'] ); ?>" loading="lazy"><?php } ?><a class="team-card__social" href="<?php echo esc_url( $member['social'] ?? '#' ); ?>" aria-label="<?php echo esc_attr( sprintf( __( '%s on X', 'estatein' ), $member['name'] ) ); ?>">♥</a></div><h3><?php echo esc_html( $member['name'] ); ?></h3><p><?php echo esc_html( $member['role'] ); ?></p><a class="hello" href="<?php echo esc_url( $member['contact'] ?? 'mailto:hello@example.com' ); ?>"><span><?php esc_html_e( 'Say Hello', 'estatein' ); ?> 👋</span><span class="send" aria-hidden="true">➤</span></a></article><?php endforeach; ?>
 </div></div></section>
-

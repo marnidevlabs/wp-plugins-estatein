@@ -14,16 +14,26 @@ $testimonial_query = new WP_Query(
 );
 $testimonials      = array();
 foreach ( $testimonial_query->posts as $testimonial ) {
+	$rating         = (int) get_post_meta( $testimonial->ID, '_estatein_rating', true );
 	$testimonials[] = array(
 		'title'      => get_the_title( $testimonial ),
 		'quote'      => $testimonial->post_excerpt ? $testimonial->post_excerpt : wp_strip_all_tags( $testimonial->post_content ),
 		'person'     => get_post_meta( $testimonial->ID, '_estatein_person', true ),
 		'location'   => get_post_meta( $testimonial->ID, '_estatein_location', true ),
+		'rating'     => $rating ? max( 1, min( 5, $rating ) ) : 5,
 		'image_html' => get_the_post_thumbnail( $testimonial, 'thumbnail', array( 'loading' => 'lazy' ) ),
 	);
 }
 if ( ! $testimonials ) {
-	$testimonials = Defaults::testimonials(); }
+	$testimonials = array_map(
+		static function ( array $testimonial ): array {
+			$testimonial['title']  = sprintf( __( 'Demo: %s', 'estatein' ), $testimonial['title'] );
+			$testimonial['rating'] = 5;
+			return $testimonial;
+		},
+		Defaults::testimonials()
+	);
+}
 wp_reset_postdata();
 ?>
 <section class="section home-section"><div class="container">
@@ -37,11 +47,11 @@ get_template_part(
 	)
 );
 ?>
-<a class="button button--secondary section-link" href="#testimonials"><?php esc_html_e( 'View All Testimonials', 'estatein' ); ?></a><div class="home-slider" data-home-slider id="testimonials"><div class="testimonial-grid" data-home-track>
+<div class="home-slider" data-home-slider id="testimonials"><div class="testimonial-grid" data-home-track>
 <?php
 foreach ( $testimonials as $testimonial ) :
 	?>
-	<article class="testimonial-card"><div class="stars" aria-label="<?php esc_attr_e( 'Five out of five stars', 'estatein' ); ?>">★ ★ ★ ★ ★</div><h3><?php echo esc_html( $testimonial['title'] ); ?></h3><p><?php echo esc_html( $testimonial['quote'] ); ?></p><div class="reviewer">
+	<article class="testimonial-card"><div class="stars" aria-label="<?php echo esc_attr( sprintf( __( '%1$d out of %2$d stars', 'estatein' ), $testimonial['rating'], 5 ) ); ?>"><?php echo esc_html( str_repeat( '★ ', $testimonial['rating'] ) . str_repeat( '☆ ', 5 - $testimonial['rating'] ) ); ?></div><h3><?php echo esc_html( $testimonial['title'] ); ?></h3><p><?php echo esc_html( $testimonial['quote'] ); ?></p><div class="reviewer">
 	<?php
 	if ( ! empty( $testimonial['image_html'] ) ) {
 		echo wp_kses_post( $testimonial['image_html'] ); } else {
@@ -58,4 +68,3 @@ foreach ( $testimonials as $testimonial ) :
 	);
 	?>
 </div></section>
-

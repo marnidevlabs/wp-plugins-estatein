@@ -8,7 +8,15 @@ $fallback_menu = static function (): void {
 	);
 	echo '<ul class="menu">';
 	foreach ( $items as $label => $path ) {
-		$is_current = is_page( trim( $path, '/' ) ) || ( '/services/' === $path && get_query_var( 'estatein_services' ) ) || ( '/properties/' === $path && is_post_type_archive( 'estatein_property' ) );
+		if ( '/' === $path ) {
+			$is_current = is_front_page() && ! get_query_var( 'estatein_services' ) && ! get_query_var( 'estatein_contact' );
+		} elseif ( '/services/' === $path ) {
+			$is_current = (bool) get_query_var( 'estatein_services' );
+		} elseif ( '/properties/' === $path ) {
+			$is_current = is_post_type_archive( 'estatein_property' ) || is_singular( 'estatein_property' );
+		} else {
+			$is_current = is_page( trim( $path, '/' ) );
+		}
 		printf( '<li><a href="%1$s"%2$s>%3$s</a></li>', esc_url( home_url( $path ) ), $is_current ? ' aria-current="page"' : '', esc_html( $label ) );
 	}
 	echo '</ul>';

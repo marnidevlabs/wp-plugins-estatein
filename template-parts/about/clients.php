@@ -25,7 +25,13 @@ if ( $query->have_posts() ) {
 		);
 	}
 } else {
-	$clients = Defaults::clients(); }
+	$clients = array_map(
+		static function ( array $client ): array {
+			$client['name'] = sprintf( __( 'Demo: %s', 'estatein' ), $client['name'] );
+			return $client;
+		},
+		Defaults::clients()
+	); }
 wp_reset_postdata();
 ?>
 <section class="section clients"><div class="container">

@@ -1,0 +1,17 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/theme.json",
+  "version": 3,
+  "settings": {
+    "appearanceTools": true,
+    "layout": { "contentSize": "900px", "wideSize": "1596px" },
+    "color": { "palette": [
+      { "slug": "background", "color": "#141414", "name": "Background" },
+      { "slug": "surface", "color": "#1a1a1a", "name": "Surface" },
+      { "slug": "text", "color": "#ffffff", "name": "Text" },
+      { "slug": "muted", "color": "#999999", "name": "Muted" },
+      { "slug": "primary", "color": "#703bf7", "name": "Primary" }
+    ] },
+    "typography": { "fontFamilies": [ { "slug": "urbanist", "name": "Urbanist", "fontFamily": "Urbanist, Inter, system-ui, sans-serif" } ] }
+  },
+  "styles": { "color": { "background": "#141414", "text": "#ffffff" }, "typography": { "fontFamily": "var(--wp--preset--font-family--urbanist)" } }
+}

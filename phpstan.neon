@@ -1,0 +1,9 @@
+parameters:
+  level: 5
+  paths:
+    - app
+  bootstrapFiles:
+    - ../../../wp-load.php
+  excludePaths:
+    analyse:
+      - vendor
